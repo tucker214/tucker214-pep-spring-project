@@ -35,4 +35,9 @@ public class MessageService {
     {
         this.messageRepository.save(newMessage);
     }
+
+    public void deleteMessage(Integer messageId) throws IllegalArgumentException
+    {
+        this.messageRepository.deleteById(messageId);
+    }
 }

@@ -4,9 +4,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+
 import com.example.entity.Account;
 import com.example.entity.Message;
 import com.example.exception.ResourceNotFoundException;
@@ -96,5 +100,24 @@ public class SocialMediaController {
 
         else
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    }
+
+    @DeleteMapping("messages/{messageId}")
+    public @ResponseBody ResponseEntity<Integer> deleteMessage(@PathVariable("messageId") Integer messageId)
+    {
+        boolean isMessageDeleted = false;
+        try {
+            Message foundMessage = this.messageService.findMessage(messageId);
+            this.messageService.deleteMessage(messageId);
+            isMessageDeleted = true;
+        } catch (ResourceNotFoundException e) {
+            e.getMessage();
+        }
+        
+        if (isMessageDeleted)
+            return ResponseEntity.status(HttpStatus.OK).body(1);
+        else
+            return ResponseEntity.status(HttpStatus.OK).body(null);
+
     }
 }
