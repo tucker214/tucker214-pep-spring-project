@@ -73,5 +73,28 @@ public class SocialMediaController {
         return ResponseEntity.status(HttpStatus.OK).body(loggedInAccount);
     }
 
+    @PostMapping("messages")
+    public @ResponseBody ResponseEntity<Message> createMessage(@RequestBody Message newMessage)
+    {
+        boolean isBadRequest = true;
+        if (!newMessage.getMessageText().isBlank() && newMessage.getMessageText().length() < 256)
+        {
+            Integer postedBy = newMessage.getPostedBy();
+            
+            try {
+                Account accountPostedBy = this.accountService.findAccount(postedBy);
+                this.messageService.saveMessage(newMessage);
+                isBadRequest = false;
+            } catch (Exception e) {
+                isBadRequest = true;
+                
+            }
+        }
 
+        if (!isBadRequest)
+            return ResponseEntity.status(HttpStatus.OK).body(newMessage);
+
+        else
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    }
 }

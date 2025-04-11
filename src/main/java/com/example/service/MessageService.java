@@ -30,4 +30,9 @@ public class MessageService {
     {
         return this.messageRepository.findById(messageId).orElseThrow(() -> new ResourceNotFoundException("Message with ID: " + messageId + " not found"));
     }
+
+    public void saveMessage(Message newMessage)
+    {
+        this.messageRepository.save(newMessage);
+    }
 }
