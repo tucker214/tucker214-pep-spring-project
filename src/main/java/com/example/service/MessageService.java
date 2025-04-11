@@ -26,6 +26,11 @@ public class MessageService {
         return (List<Message>) this.messageRepository.findAll();
     }
 
+    public List<Message> getMessageListByAccountId(Integer accountId) throws ResourceNotFoundException
+    {
+        return this.messageRepository.findByPostedBy(accountId).orElseThrow(() -> new ResourceNotFoundException("Messages not found under ID: " + accountId));
+    }
+
     public Message findMessage(Integer messageId) throws ResourceNotFoundException
     {
         return this.messageRepository.findById(messageId).orElseThrow(() -> new ResourceNotFoundException("Message with ID: " + messageId + " not found"));
@@ -40,4 +45,6 @@ public class MessageService {
     {
         this.messageRepository.deleteById(messageId);
     }
+
+
 }
