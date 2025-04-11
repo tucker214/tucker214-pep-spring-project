@@ -40,4 +40,9 @@ public class AccountService {
         return this.accountRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("Account with username: " + username + " not found")) != null;
     }
 
+    public Account login(String username, String password)
+    {
+        return this.accountRepository.findByUsernameAndPassword(username, password).orElseThrow(() -> new ResourceNotFoundException("Account with username: " + username + " not found"));
+    }
+
 }

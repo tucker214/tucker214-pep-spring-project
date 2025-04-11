@@ -58,6 +58,20 @@ public class SocialMediaController {
     }
 
     @PostMapping("login")
-    
+    public @ResponseBody ResponseEntity<Account> login(@RequestBody Account account)
+    {
+        Account loggedInAccount = null;
+
+        try {
+            loggedInAccount = this.accountService.login(account.getUsername(), account.getPassword());
+
+        } catch (ResourceNotFoundException e) {
+            e.getMessage();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(loggedInAccount);
+        }
+        
+        return ResponseEntity.status(HttpStatus.OK).body(loggedInAccount);
+    }
+
 
 }
