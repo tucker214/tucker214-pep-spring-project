@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.example.entity.Account;
@@ -124,7 +125,7 @@ public class SocialMediaController {
     public @ResponseBody ResponseEntity<Message> getMessageById(@PathVariable("messageId") Integer messageId)
     {
         Message foundMessage = null;
-        
+
         try {
             foundMessage = this.messageService.findMessage(messageId);
         } catch (ResourceNotFoundException e) {
@@ -132,5 +133,28 @@ public class SocialMediaController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(foundMessage); 
+    }
+
+    @PatchMapping("messages/{messageId}")
+    public @ResponseBody ResponseEntity<Integer> updateMessage(@PathVariable("messageId") Integer messageId, @RequestBody Message message)
+    {
+        try {
+            Message foundMessage = this.messageService.findMessage(messageId);
+            if (!message.getMessageText().isEmpty() && (message.getMessageText().length() < 256))
+            {
+                foundMessage.setMessageText(message.getMessageText());
+                this.messageService.saveMessage(foundMessage);
+                
+            }
+
+            else
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+
+        } catch (ResourceNotFoundException e) {
+            e.getMessage();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(1);
     }
 }
