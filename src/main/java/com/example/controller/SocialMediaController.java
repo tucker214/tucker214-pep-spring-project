@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import com.example.entity.Account;
 import com.example.entity.Message;
 import com.example.exception.ResourceNotFoundException;
+import java.util.List;
 
 /**
  * TODO: You will need to write your own endpoints and handlers for your controller using Spring. The endpoints you will need can be
@@ -156,5 +157,11 @@ public class SocialMediaController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(1);
+    }
+
+    @GetMapping("messages")
+    public @ResponseBody ResponseEntity<List<Message>> getAllMessages()
+    {
+        return ResponseEntity.status(HttpStatus.OK).body(this.messageService.getMessageList());
     }
 }
