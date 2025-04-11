@@ -30,9 +30,14 @@ public class AccountService {
         this.accountRepository.save(account);
     }
 
-        public Account findAccount(Integer accountId) throws ResourceNotFoundException
+    public Account findAccount(Integer accountId) throws ResourceNotFoundException
     {
         return this.accountRepository.findById(accountId).orElseThrow(() -> new ResourceNotFoundException("Message with ID: " + accountId + " not found"));
+    }
+
+    public boolean doesUsernameExist(String username)
+    {
+        return this.accountRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("Account with username: " + username + " not found")) != null;
     }
 
 }

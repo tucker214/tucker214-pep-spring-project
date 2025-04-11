@@ -38,27 +38,26 @@ public class SocialMediaController {
     public @ResponseBody ResponseEntity<Account> registerAccount(@RequestBody Account newAccount)
     {
 
-        if (!newAccount.getUsername().isBlank() && newAccount.getPassword().length() > 3)
+        if (!newAccount.getUsername().isEmpty() && newAccount.getPassword().length() > 3)
         {
             try {
-                Account searchAccount = this.accountService.findAccount(newAccount.getAccountId());
-                if (searchAccount.getUsername() == newAccount.getUsername())
+                boolean doesUsernameExist = this.accountService.doesUsernameExist(newAccount.getUsername());
+                if (doesUsernameExist)
                 {
                     return ResponseEntity.status(HttpStatus.CONFLICT).body(newAccount);
                 }
-
-                else
-                {
-                    this.accountService.registerAccount(newAccount);
-                    return ResponseEntity.status(HttpStatus.CREATED).body(newAccount);
-                }
             } catch (ResourceNotFoundException e) {
+                //duplicate username not found, so resource returns a ResourceNotFound exception. Account successfully created
                 e.getMessage();
+                this.accountService.registerAccount(newAccount);
+                return ResponseEntity.status(HttpStatus.OK).body(newAccount);
             }
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        
     }
+
+    @PostMapping("login")
+    
 
 }
